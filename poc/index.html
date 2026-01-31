@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DermaCube - Simulation PoC</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <div class="logo-box">ALI</div>
+            <div class="logo-text">
+                <h1>DermaCube</h1>
+                <span>Plateforme intelligente pour la culture de peau</span>
+            </div>
+        </div>
+        <div class="header-info">
+            <span class="badge">PoC Simulation</span>
+            <span class="time" id="simulation-time">00:00:00</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Status Cards -->
+        <section class="status-cards">
+            <div class="card" id="temp-card">
+                <div class="card-value"><span id="temp-value">37.0</span>°C</div>
+                <div class="card-label">Température</div>
+                <div class="card-status ok" id="temp-status">OK</div>
+            </div>
+            <div class="card" id="co2-card">
+                <div class="card-value"><span id="co2-value">5.0</span>%</div>
+                <div class="card-label">CO₂</div>
+                <div class="card-status ok" id="co2-status">OK</div>
+            </div>
+            <div class="card" id="ph-card">
+                <div class="card-value">pH <span id="ph-value">7.35</span></div>
+                <div class="card-label">Acidité</div>
+                <div class="card-status ok" id="ph-status">OK</div>
+            </div>
+            <div class="card" id="humidity-card">
+                <div class="card-value"><span id="humidity-value">92</span>%</div>
+                <div class="card-label">Humidité</div>
+                <div class="card-status warning" id="humidity-status">Attention</div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="main-content">
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <h2>Niveau de Milieu - Interface Air-Liquide</h2>
+                <div class="chart-container">
+                    <canvas id="ali-chart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color dermacube"></span>
+                        <span>Avec DermaCube</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color without"></span>
+                        <span>Sans DermaCube</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color target"></span>
+                        <span>Zone ALI optimale</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Panel -->
+            <div class="side-panel">
+                <!-- AI Predictions -->
+                <div class="panel-card ai-panel">
+                    <h3>🧠 IA Prédictive</h3>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Prochain ajustement :</span>
+                        <span class="prediction-value" id="next-adjustment">dans 2h34</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Viabilité estimée :</span>
+                        <span class="prediction-value highlight" id="viability">98.5% à 72h</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="prediction-label">Risque d'échec :</span>
+                        <span class="prediction-value low" id="failure-risk">Faible</span>
+                    </div>
+                </div>
+
+                <!-- Comparison Panel -->
+                <div class="panel-card comparison-panel">
+                    <h3>📊 Comparaison</h3>
+                    <div class="comparison-item bad">
+                        <div class="comparison-label">Sans DermaCube :</div>
+                        <div class="comparison-value" id="without-status">Échec à 8h (ALI perdue)</div>
+                    </div>
+                    <div class="comparison-item good">
+                        <div class="comparison-label">Avec DermaCube :</div>
+                        <div class="comparison-value" id="with-status">Stable >72h</div>
+                    </div>
+                </div>
+
+                <!-- Pump Activity -->
+                <div class="panel-card pump-panel">
+                    <h3>⚙️ Activité Pompe</h3>
+                    <div class="pump-indicator">
+                        <div class="pump-status" id="pump-status">ACTIF</div>
+                        <div class="pump-flow">
+                            <span>Débit :</span>
+                            <span id="pump-flow">0.02 mL/min</span>
+                        </div>
+                    </div>
+                    <div class="pump-bar-container">
+                        <div class="pump-bar" id="pump-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ALI Visualization -->
+        <section class="ali-visualization">
+            <h2>Visualisation de la Chambre de Culture</h2>
+            <div class="chamber-container">
+                <div class="chamber">
+                    <div class="air-zone">
+                        <span>Air (différenciation)</span>
+                    </div>
+                    <div class="epidermis">Épiderme</div>
+                    <div class="dermis">Derme</div>
+                    <div class="membrane">Membrane poreuse</div>
+                    <div class="medium-zone" id="medium-zone">
+                        <div class="medium-level" id="medium-level"></div>
+                        <span class="medium-label">Milieu de culture</span>
+                    </div>
+                    <div class="ali-line" id="ali-line">
+                        <span class="ali-marker">← Interface ALI</span>
+                    </div>
+                </div>
+                <div class="chamber-info">
+                    <div class="info-item">
+                        <span class="info-label">Niveau actuel :</span>
+                        <span class="info-value" id="current-level">1.50 mL</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Niveau cible :</span>
+                        <span class="info-value">1.50 mL</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Écart :</span>
+                        <span class="info-value" id="level-deviation">±0.00 mL</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls -->
+        <section class="controls">
+            <div class="control-buttons">
+                <button class="btn btn-primary" id="btn-play">
+                    <span class="btn-icon">▶</span> Play
+                </button>
+                <button class="btn btn-secondary" id="btn-pause" disabled>
+                    <span class="btn-icon">⏸</span> Pause
+                </button>
+                <button class="btn btn-warning" id="btn-incident">
+                    <span class="btn-icon">⚠</span> Incident
+                </button>
+                <button class="btn btn-danger" id="btn-reset">
+                    <span class="btn-icon">↺</span> Reset
+                </button>
+            </div>
+
+            <div class="scenario-selector">
+                <label for="scenario">Scénario :</label>
+                <select id="scenario">
+                    <option value="normal">Culture normale 72h</option>
+                    <option value="evaporation">Évaporation accélérée (humidité basse)</option>
+                    <option value="temperature">Panne de température</option>
+                    <option value="contamination">Contamination (chute pH)</option>
+                </select>
+            </div>
+
+            <div class="speed-control">
+                <label for="speed">Vitesse :</label>
+                <input type="range" id="speed" min="1" max="100" value="10">
+                <span id="speed-value">x10</span>
+            </div>
+        </section>
+
+        <!-- Event Log -->
+        <section class="event-log">
+            <h3>📋 Journal des événements</h3>
+            <div class="log-container" id="log-container">
+                <div class="log-entry info">
+                    <span class="log-time">00:00:00</span>
+                    <span class="log-message">Système initialisé. Prêt pour la simulation.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>DermaCube PoC - Hackathon Owl Lifesciences - Janvier 2026</p>
+        <p class="tagline">La culture de peau, enfin maîtrisée.</p>
+    </footer>
+
+    <script src="simulation.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
