@@ -1,0 +1,841 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Thème et couleurs
+\usetheme{Madrid}
+\usecolortheme{seahorse}
+
+% Couleurs DermaCube
+\definecolor{dermacube}{RGB}{61, 180, 180}
+\definecolor{dermacubedark}{RGB}{42, 154, 154}
+\definecolor{dermacubelight}{RGB}{95, 207, 207}
+\definecolor{danger}{RGB}{244, 67, 54}
+\definecolor{success}{RGB}{76, 175, 80}
+\definecolor{warning}{RGB}{255, 152, 0}
+
+\setbeamercolor{palette primary}{bg=dermacube,fg=white}
+\setbeamercolor{palette secondary}{bg=dermacubedark,fg=white}
+\setbeamercolor{palette tertiary}{bg=dermacubedark,fg=white}
+\setbeamercolor{structure}{fg=dermacube}
+\setbeamercolor{block title}{bg=dermacube,fg=white}
+\setbeamercolor{block body}{bg=dermacubelight!20}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{eurosym}
+\usepackage{fontawesome5}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+
+% Supprimer navigation
+\setbeamertemplate{navigation symbols}{}
+
+% Footer personnalisé
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+            \usebeamerfont{author in head/foot}DermaCube
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+            \usebeamerfont{title in head/foot}Hackathon Owl Lifesciences
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+            \usebeamerfont{date in head/foot}\insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+        \end{beamercolorbox}}%
+    \vskip0pt%
+}
+
+% Titre
+\title[DermaCube]{\textbf{DermaCube}}
+\subtitle{Plateforme intelligente pour la culture de peau}
+\author{Hackathon Owl Lifesciences}
+\date{Février 2026}
+\institute{\textit{La culture de peau, enfin maîtrisée.}}
+
+\begin{document}
+
+% ============================================
+% SLIDE TITRE
+% ============================================
+\begin{frame}
+\titlepage
+\begin{center}
+\begin{tikzpicture}
+\node[draw=dermacube, line width=2pt, rounded corners=5pt, minimum width=1.5cm, minimum height=1.5cm, fill=white] {\textbf{\textcolor{dermacube}{ALI}}};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+% ============================================
+% SLIDE AGENDA
+% ============================================
+\begin{frame}{Agenda}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\tableofcontents
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+% Schéma simplifié de la culture de peau
+\draw[thick, fill=blue!10] (0,0) rectangle (4,3);
+\node at (2,2.5) {\small Air};
+\draw[thick, fill=orange!30] (0.2,1.5) rectangle (3.8,2);
+\node at (2,1.75) {\scriptsize Épiderme};
+\draw[thick, fill=orange!20] (0.2,1.2) rectangle (3.8,1.5);
+\node at (2,1.35) {\scriptsize Derme};
+\draw[dashed, thick, dermacube] (0,1.2) -- (4,1.2);
+\draw[thick, fill=cyan!30] (0.2,0.2) rectangle (3.8,1.2);
+\node at (2,0.7) {\small Milieu};
+\draw[->, thick, danger] (4.5,1.2) -- (5.5,1.2);
+\node[right] at (5.5,1.2) {\scriptsize \textcolor{danger}{Interface ALI}};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ============================================
+% SECTION 1 : LE BESOIN
+% ============================================
+\section{Le Besoin}
+
+\begin{frame}{Le Contexte : La Culture de Peau}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{Pourquoi cultiver de la peau in vitro ?}
+\begin{itemize}
+    \item \faFlask{} \textbf{Cosmétique} : Tests obligatoires sans animaux (UE 2013)
+    \item \faPills{} \textbf{Pharma} : Tests dermatologiques, toxicité
+    \item \faHospital{} \textbf{Médecine} : Greffes pour grands brûlés
+    \item \faUserMd{} \textbf{Personnalisée} : Modèles patient-spécifiques
+\end{itemize}
+
+\vspace{0.5cm}
+\begin{alertblock}{Marché en forte croissance}
+516 M\$ (2021) $\rightarrow$ \textbf{1.2 Md\$} (2031) \\
+TCAC : 12-15\%
+\end{alertblock}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+% Graphique croissance marché
+\draw[->] (0,0) -- (5,0) node[right] {\scriptsize Années};
+\draw[->] (0,0) -- (0,4) node[above] {\scriptsize M\$};
+\draw[thick, dermacube] (0,1) .. controls (1,1.2) and (2,1.5) .. (3,2) .. controls (4,2.8) .. (4.5,3.5);
+\node[left] at (0,1) {\scriptsize 516};
+\node[left] at (0,3.5) {\scriptsize 1200};
+\node[below] at (0,0) {\scriptsize 2021};
+\node[below] at (4.5,0) {\scriptsize 2031};
+\fill[dermacube] (0,1) circle (3pt);
+\fill[dermacube] (4.5,3.5) circle (3pt);
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Le Problème : 30-50\% d'Échec}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{block}{Cause principale : l'Interface Air-Liquide (ALI)}
+La culture de peau nécessite :
+\begin{itemize}
+    \item Face supérieure exposée à l'\textbf{air} $\rightarrow$ différenciation
+    \item Face inférieure en contact avec le \textbf{milieu} $\rightarrow$ nutrition
+\end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+\textbf{Le défi :} Maintenir ce niveau \textbf{constant} malgré :
+\begin{itemize}
+    \item[$\times$] Évaporation continue (0.5-1 mL/jour)
+    \item[$\times$] Consommation cellulaire
+    \item[$\times$] Ajustements manuels imprécis
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+% Schéma ALI
+\draw[thick, rounded corners] (0,0) rectangle (4,4);
+
+% Air
+\fill[blue!10] (0.1,2.5) rectangle (3.9,3.9);
+\node at (2,3.2) {Air};
+
+% Épiderme
+\fill[orange!40] (0.3,2) rectangle (3.7,2.5);
+\node at (2,2.25) {\scriptsize Épiderme};
+
+% Derme
+\fill[orange!25] (0.3,1.7) rectangle (3.7,2);
+\node at (2,1.85) {\scriptsize Derme};
+
+% Membrane
+\draw[dashed, thick] (0.3,1.5) -- (3.7,1.5);
+
+% Milieu
+\fill[cyan!30] (0.1,0.1) rectangle (3.9,1.5);
+\node at (2,0.8) {Milieu};
+
+% Flèche ALI
+\draw[<->, thick, danger] (4.3,1.5) -- (4.3,2.5);
+\node[right, danger] at (4.3,2) {\scriptsize \textbf{ALI critique}};
+
+% Annotation niveau
+\draw[<->, thick, dermacube] (-0.3,0.1) -- (-0.3,1.5);
+\node[left, dermacube] at (-0.3,0.8) {\scriptsize Niveau};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Impact Économique des Échecs}
+\begin{center}
+\begin{tikzpicture}
+% Boîtes d'impact
+\node[draw=danger, fill=danger!10, rounded corners, minimum width=3cm, minimum height=1.5cm, align=center] (echec) at (0,0) {\textbf{40\%}\\ d'échecs};
+
+\node[draw=warning, fill=warning!10, rounded corners, minimum width=3cm, minimum height=1.5cm, align=center] (temps) at (4,1.5) {\textbf{2-4 semaines}\\ perdues/échec};
+
+\node[draw=warning, fill=warning!10, rounded corners, minimum width=3cm, minimum height=1.5cm, align=center] (cout) at (4,-1.5) {\textbf{1 500\euro}\\ par culture};
+
+\node[draw=danger, fill=danger!20, rounded corners, minimum width=4cm, minimum height=1.5cm, align=center, line width=2pt] (perte) at (9,0) {\textbf{60 000\euro/an}\\ de pertes};
+
+\draw[->, thick] (echec) -- (temps);
+\draw[->, thick] (echec) -- (cout);
+\draw[->, thick] (temps) -- (perte);
+\draw[->, thick] (cout) -- (perte);
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.5cm}
+\begin{alertblock}{Pour un laboratoire réalisant 100 cultures/an}
+Sans compter : retards de projets, perte de crédibilité, stress des équipes
+\end{alertblock}
+\end{frame}
+
+% ============================================
+% SECTION 2 : LA SOLUTION
+% ============================================
+\section{La Solution}
+
+\begin{frame}{DermaCube : Régulation Automatique de l'ALI}
+\begin{center}
+\Large\textbf{Système \textcolor{dermacube}{complémentaire} aux incubateurs existants}
+\end{center}
+
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{block}{L'incubateur (Macro)}
+Régule l'ambiance globale :
+\begin{itemize}
+    \item Température 37°C
+    \item CO$_2$ 5\%
+    \item Humidité >90\%
+\end{itemize}
+\end{block}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{block}{DermaCube (Micro)}
+Régule \textbf{localement} :
+\begin{itemize}
+    \item \textcolor{dermacube}{\textbf{Niveau de milieu}} dans chaque puits
+    \item Paramètre que l'incubateur \textbf{ne peut pas} contrôler
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.5cm}
+\begin{center}
+\textcolor{dermacube}{\faCheckCircle} Compatible avec \textbf{TOUS} les incubateurs CO$_2$ standards
+\end{center}
+\end{frame}
+
+\begin{frame}{Architecture du Système}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.85, transform shape]
+% Styles
+\tikzstyle{block} = [rectangle, draw, fill=dermacube!20, text width=2.5cm, text centered, rounded corners, minimum height=1cm]
+\tikzstyle{sensor} = [rectangle, draw, fill=blue!20, text width=2cm, text centered, rounded corners, minimum height=0.8cm]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+% Blocs
+\node[sensor] (capteur) {Capteur niveau};
+\node[block, right=of capteur] (pid) {\textbf{Contrôleur PID}};
+\node[block, right=of pid] (pompe) {Pompe péristaltique};
+\node[block, below=of pompe] (chambre) {Chambre de culture};
+
+% Flèches
+\draw[arrow] (capteur) -- node[above] {\scriptsize Mesure} (pid);
+\draw[arrow] (pid) -- node[above] {\scriptsize Commande} (pompe);
+\draw[arrow] (pompe) -- node[right] {\scriptsize Milieu} (chambre);
+\draw[arrow] (chambre) -| node[below, pos=0.25] {\scriptsize Feedback} (capteur);
+
+% Monitoring
+\node[sensor, above=0.8cm of pid] (monitoring) {T°, Humidité, pH};
+\draw[arrow, dashed] (monitoring) -- node[right] {\scriptsize Info} (pid);
+
+% Annotations
+\node[below=0.3cm of chambre, align=center] {\scriptsize \textcolor{dermacube}{Boucle fermée de régulation}};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\begin{columns}
+\begin{column}{0.33\textwidth}
+\centering
+\textbf{Capteur optique}\\
+\scriptsize Précision ±50 µm\\
+Intégré à la chambre
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+\textbf{Algorithme PID}\\
+\scriptsize Régulation continue\\
+Anticipation IA
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+\textbf{Pompe précision}\\
+\scriptsize 0-100 µL/min\\
+Injection par le bas
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Résultats : Avec vs Sans DermaCube}
+\begin{center}
+\begin{tabular}{l|cc}
+\toprule
+\textbf{Paramètre} & \textcolor{danger}{\textbf{Sans DermaCube}} & \textcolor{success}{\textbf{Avec DermaCube}} \\
+\midrule
+Fréquence ajustement & 2×/jour (manuel) & Continu (temps réel) \\
+Précision & ±20\% (erreur humaine) & \textbf{±0.1 mL} (asservi) \\
+Stabilité niveau & "Dents de scie" & \textbf{Ligne stable} \\
+Résilience incidents & Nulle & \textbf{Haute} \\
+\midrule
+\textbf{Taux d'échec} & \textcolor{danger}{\textbf{30-50\%}} & \textcolor{success}{\textbf{<10\%}} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.5cm}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\textcolor{danger}{\textbf{Sans DermaCube}}\\
+\begin{tikzpicture}[scale=0.6]
+\draw[->] (0,0) -- (4,0) node[right] {\scriptsize t};
+\draw[->] (0,0) -- (0,3) node[above] {\scriptsize V};
+\draw[thick, danger] (0,2) -- (0.5,1.5) -- (0.5,2.3) -- (1,1.7) -- (1,2.4) -- (1.5,1.6) -- (1.5,2.2) -- (2,1.4) -- (2,2.1) -- (2.5,1.2) -- (2.5,1.9) -- (3,0.8);
+\draw[dashed] (0,1.5) -- (4,1.5);
+\node[right] at (3,0.8) {\scriptsize \textcolor{danger}{Échec}};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\textcolor{success}{\textbf{Avec DermaCube}}\\
+\begin{tikzpicture}[scale=0.6]
+\draw[->] (0,0) -- (4,0) node[right] {\scriptsize t};
+\draw[->] (0,0) -- (0,3) node[above] {\scriptsize V};
+\draw[thick, dermacube] (0,1.5) .. controls (0.5,1.55) and (1,1.45) .. (1.5,1.5) .. controls (2,1.55) and (2.5,1.48) .. (3,1.5) -- (3.5,1.52);
+\draw[dashed] (0,1.5) -- (4,1.5);
+\fill[success!20] (0,1.3) rectangle (3.5,1.7);
+\node[right] at (3.5,1.5) {\scriptsize \textcolor{success}{Stable}};
+\end{tikzpicture}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ============================================
+% SECTION 3 : PoC
+% ============================================
+\section{Proof of Concept}
+
+\begin{frame}{Notre PoC : Simulation Interactive}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\textbf{Ce que démontre le PoC :}
+\begin{enumerate}
+    \item \textbf{Modèle physique validé}
+    \begin{itemize}
+        \item Équation : $\frac{dV}{dt} = Q_{pompe} - Q_{evap} - Q_{conso}$
+        \item Valeurs issues de la littérature
+    \end{itemize}
+
+    \item \textbf{Efficacité du contrôle PID}
+    \begin{itemize}
+        \item Régulation continue
+        \item Stabilité ±0.1 mL
+    \end{itemize}
+
+    \item \textbf{Comparaison visuelle}
+    \begin{itemize}
+        \item Échec sans contrôle
+        \item Succès avec DermaCube
+    \end{itemize}
+
+    \item \textbf{IA prédictive}
+    \begin{itemize}
+        \item Estimation viabilité
+        \item Alertes précoces
+    \end{itemize}
+\end{enumerate}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{center}
+% \fbox{\includegraphics[width=\textwidth]{poc_screenshot.png}}
+\fbox{\parbox{0.9\textwidth}{\centering\vspace{1cm}\textbf{DÉMO LIVE}\\Dashboard interactif\vspace{1cm}}}
+\scriptsize Dashboard interactif\\
+\vspace{0.3cm}
+\textbf{4 scénarios de test :}
+\begin{enumerate}
+    \scriptsize
+    \item Culture normale 72h
+    \item Évaporation accélérée
+    \item Panne température
+    \item Contamination (pH)
+\end{enumerate}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Modèle Mathématique du PoC}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{block}{Équation d'évaporation}
+$$Q_{evap} = k_{base} \times f(T) \times f(H)$$
+
+\small
+\begin{itemize}
+    \item $k_{base} = 0.03$ mL/h
+    \item $f(T) = 1 + 0.05(T - 37)$
+    \item $f(H) = \frac{100-H}{100-95}$
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Exemple}
+\small
+À 70\% humidité :\\
+$Q_{evap} = 0.03 \times 1 \times 6 = \textbf{0.18 mL/h}$\\
+= \textcolor{danger}{6× plus rapide !}
+\end{exampleblock}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{block}{Contrôleur PID}
+$$Q_{pompe} = K_p \cdot e(t) + K_i \cdot \int e(\tau)d\tau$$
+
+\small
+\begin{itemize}
+    \item $K_p = 0.5$ (proportionnel)
+    \item $K_i = 0.1$ (intégral)
+    \item $e(t) = V_{cible} - V_{mesure}$
+\end{itemize}
+\end{block}
+
+\begin{block}{Saturation}
+\small
+$Q_{pompe} \in [0, 0.1]$ mL/min\\
+(limites physiques de la pompe)
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ============================================
+% SECTION 4 : MARCHÉ
+% ============================================
+\section{Analyse de Marché}
+
+\begin{frame}{Segmentation du Marché}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+% Cercles concentriques TAM/SAM/SOM
+\fill[dermacube!10] (0,0) circle (3.5cm);
+\fill[dermacube!30] (0,0) circle (2.5cm);
+\fill[dermacube!60] (0,0) circle (1.2cm);
+
+\node at (0,0) {\textbf{SOM}};
+\node at (0,-0.4) {\scriptsize 100 M\euro};
+\node at (1.8,0) {\textbf{SAM}};
+\node at (1.8,-0.4) {\scriptsize 1.2 Md\$};
+\node at (2.8,1.5) {\textbf{TAM}};
+\node at (2.8,1.1) {\scriptsize 5.3 Md\$};
+
+% Légende
+\node[right] at (4,2) {\small \textbf{TAM} : Culture 3D mondiale};
+\node[right] at (4,1) {\small \textbf{SAM} : Organoïdes/sphéroïdes};
+\node[right] at (4,0) {\small \textbf{SOM} : Culture peau Europe};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{Nos Clients Cibles}
+\begin{columns}
+\begin{column}{0.47\textwidth}
+\begin{block}{\faFlask{} Industrie Cosmétique}
+\begin{itemize}
+    \item 500+ entreprises en Europe
+    \item Obligation légale (2013)
+    \item \textbf{Potentiel : Très élevé}
+\end{itemize}
+\textit{L'Oréal, LVMH, Clarins, Pierre Fabre...}
+\end{block}
+
+\begin{block}{\faBuilding{} CROs}
+\begin{itemize}
+    \item 100+ entreprises
+    \item Tests sous-traités
+    \item \textbf{Volume important}
+\end{itemize}
+\textit{Eurofins, Charles River, SGS...}
+\end{block}
+\end{column}
+\begin{column}{0.47\textwidth}
+\begin{block}{\faPills{} Pharma Dermatologie}
+\begin{itemize}
+    \item 200+ entreprises
+    \item R\&D, tests toxicité
+    \item \textbf{Potentiel : Élevé}
+\end{itemize}
+\end{block}
+
+\begin{block}{\faUniversity{} Recherche Académique}
+\begin{itemize}
+    \item 1000+ labos en Europe
+    \item Reproductibilité critique
+    \item \textbf{Prescripteurs}
+\end{itemize}
+\textit{INSERM, CNRS, CEA...}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Positionnement Concurrentiel}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+% Axes
+\draw[->] (0,0) -- (8,0) node[right] {Prix};
+\draw[->] (0,0) -- (0,5) node[above] {Spécialisation peau};
+
+% Labels axes
+\node[below] at (2,0) {\scriptsize 10k\euro};
+\node[below] at (4,0) {\scriptsize 30k\euro};
+\node[below] at (6,0) {\scriptsize 50k\euro+};
+
+% Points concurrents
+\fill[gray] (1.5,0.8) circle (8pt);
+\node[below] at (1.5,0.5) {\scriptsize Incubateurs};
+
+\fill[gray] (6,2) circle (8pt);
+\node[right] at (6.3,2) {\scriptsize Organ-on-chip};
+
+\fill[gray] (2,1.5) circle (8pt);
+\node[left] at (1.7,1.5) {\scriptsize DIY};
+
+% DermaCube
+\fill[dermacube] (3.5,4) circle (12pt);
+\node[right, dermacube] at (3.8,4) {\textbf{DermaCube}};
+
+% Zone d'opportunité
+\draw[dashed, thick, dermacube] (2.5,2.5) rectangle (5,4.5);
+\node[dermacube] at (3.75,2.2) {\scriptsize Zone d'opportunité};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\textcolor{dermacube}{\textbf{Aucun concurrent direct}} : première solution intégrée dédiée 100\% à la peau
+\end{center}
+\end{frame}
+
+% ============================================
+% SECTION 5 : BUSINESS MODEL
+% ============================================
+\section{Modèle Économique}
+
+\begin{frame}{Notre Offre}
+\begin{columns}
+\begin{column}{0.54\textwidth}
+\begin{block}{\textcolor{dermacube}{\fastar} \textbf{Option A : Module seul (Recommandée)}}
+\centering
+\Large \textbf{5 500\euro}
+\normalsize
+\begin{itemize}
+    \item Module DermaCube
+    \item 10 chambres incluses
+    \item Logiciel (licence perpétuelle)
+    \item Formation incluse
+\end{itemize}
+\vspace{0.2cm}
+\textit{\textbf{90\% des labos} ont déjà un incubateur}
+\end{block}
+\end{column}
+\begin{column}{0.43\textwidth}
+\begin{block}{\textbf{Option B : Solution intégrée}}
+\centering
+\Large \textbf{14 000\euro}
+\normalsize
+\begin{itemize}
+    \item Mini-incubateur CO$_2$
+    \item Module DermaCube
+    \item 20 chambres incluses
+    \item Logiciel Pro (1 an)
+\end{itemize}
+\vspace{0.2cm}
+\textit{Nouveaux labos / clé-en-main}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.4cm}
+\begin{center}
+\textbf{Consommables récurrents :} Chambres microfluidiques \textbf{50\euro/unité}\\
+\scriptsize (Besoin : 30-50/an par client = 1 500-2 500\euro/an de revenus récurrents)
+\end{center}
+\end{frame}
+
+\begin{frame}{ROI Client : L'Argument Massue}
+\begin{center}
+\begin{tikzpicture}
+% Avant
+\node[draw=danger, fill=danger!10, rounded corners, minimum width=4cm, minimum height=2cm, align=center] (avant) at (0,0) {
+\textbf{AVANT}\\
+40 échecs/an\\
+\textcolor{danger}{\textbf{-60 000\euro}}
+};
+
+% Après
+\node[draw=success, fill=success!10, rounded corners, minimum width=4cm, minimum height=2cm, align=center] (apres) at (6,0) {
+\textbf{AVEC DermaCube}\\
+10 échecs/an\\
+\textcolor{success}{\textbf{-15 000\euro}}
+};
+
+% Flèche
+\draw[->, ultra thick, dermacube] (avant) -- (apres);
+
+% Économie
+\node[draw=dermacube, fill=dermacube!20, rounded corners, minimum width=3cm, align=center, line width=2pt] at (3,-2.5) {
+\textbf{Économie}\\
+\Large \textbf{45 000\euro/an}
+};
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.3cm}
+\begin{alertblock}{ROI première année}
+\centering
+Investissement : 5 500\euro{} + 2 500\euro{} (consommables) = 8 000\euro\\
+Économie : 45 000\euro\\
+\textbf{\textcolor{dermacube}{ROI = 462\%}}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Modèle de Revenus}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\begin{tikzpicture}[scale=0.8]
+% Pie chart
+\fill[dermacube!80] (0,0) -- (0:2) arc (0:144:2) -- cycle;
+\fill[dermacube!50] (0,0) -- (144:2) arc (144:270:2) -- cycle;
+\fill[dermacube!30] (0,0) -- (270:2) arc (270:360:2) -- cycle;
+
+\node at (72:1.2) {\textbf{40\%}};
+\node at (207:1.2) {\textbf{35\%}};
+\node at (315:1.2) {\textbf{25\%}};
+
+% Légende avec couleurs
+\fill[dermacube!80] (2.3,1.5) rectangle (2.7,1.8);
+\node[right] at (2.8,1.65) {\small Équipement};
+\fill[dermacube!50] (2.3,0.7) rectangle (2.7,1);
+\node[right] at (2.8,0.85) {\small Consommables};
+\fill[dermacube!30] (2.3,-0.1) rectangle (2.7,0.2);
+\node[right] at (2.8,0.05) {\small SaaS};
+\end{tikzpicture}
+\end{center}
+\vspace{0.3cm}
+\centering
+\textbf{60\% revenus récurrents}\\
+(consommables + SaaS)
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{tabular}{lcc}
+\toprule
+& \textbf{Prix} & \textbf{Marge} \\
+\midrule
+Module & 5 000\euro & 80\% \\
+Chambre & 50\euro & 70\% \\
+SaaS/an & 2 000\euro & 85\% \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5cm}
+\begin{block}{LTV Client (5 ans)}
+\begin{itemize}
+    \item Équipement : 5 000\euro
+    \item Consommables : 12 500\euro
+    \item SaaS : 8 000\euro
+    \item \textbf{Total : 25 500\euro}
+\end{itemize}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Projections Financières}
+\begin{center}
+\begin{tabular}{l|ccccc}
+\toprule
+& \textbf{An 1} & \textbf{An 2} & \textbf{An 3} & \textbf{An 4} & \textbf{An 5} \\
+\midrule
+Clients cumulés & 5 & 20 & 50 & 100 & 180 \\
+\midrule
+CA Équipement & 25k & 75k & 150k & 250k & 400k \\
+CA Consommables & 12k & 50k & 125k & 250k & 450k \\
+CA SaaS & 10k & 40k & 100k & 200k & 360k \\
+\midrule
+\textbf{CA Total} & \textbf{47k} & \textbf{165k} & \textbf{375k} & \textbf{700k} & \textbf{1.2M} \\
+\midrule
+Marge brute & 65\% & 70\% & 72\% & 74\% & 75\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.2cm}
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{block}{Besoin de financement}
+\textbf{Amorçage :} 500k\euro\\
+R\&D, prototypes, certifications CE
+\end{block}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{block}{Objectif Année 5}
+\textbf{180 clients}\\
+\textbf{1.2M\euro{} CA}\\
+\textbf{75\% marge brute}
+\end{block}
+\end{column}
+\end{columns}
+
+\vspace{0.2cm}
+\scriptsize \textit{*Marge croissante : économies d'échelle + poids croissant des consommables/SaaS (marge 70-85\%)}
+\end{frame}
+
+% ============================================
+% SECTION 6 : ROADMAP & ÉQUIPE
+% ============================================
+\section{Roadmap \& Équipe}
+
+\begin{frame}{Roadmap}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+% Timeline
+\draw[thick, ->] (0,0) -- (12,0);
+
+% Années
+\foreach \x/\year in {1/2026, 4/2027, 7/2028, 10/2029} {
+    \draw[thick] (\x,-0.2) -- (\x,0.2);
+    \node[below] at (\x,-0.3) {\year};
+}
+
+% Phases
+\node[draw=dermacube, fill=dermacube!20, rounded corners, minimum width=2.5cm, minimum height=1.5cm, align=center] at (1,1.5) {\scriptsize \textbf{Phase 1}\\PoC\\Prototype v1};
+
+\node[draw=dermacube, fill=dermacube!30, rounded corners, minimum width=2.5cm, minimum height=1.5cm, align=center] at (4,1.5) {\scriptsize \textbf{Phase 2}\\Beta clients\\Certification CE};
+
+\node[draw=dermacube, fill=dermacube!50, rounded corners, minimum width=2.5cm, minimum height=1.5cm, align=center] at (7,1.5) {\scriptsize \textbf{Phase 3}\\Lancement\\France};
+
+\node[draw=dermacube, fill=dermacube!70, rounded corners, minimum width=2.5cm, minimum height=1.5cm, align=center] at (10,1.5) {\scriptsize \textbf{Phase 4}\\Expansion\\Europe};
+
+% Jalons
+\node[below, align=center] at (1,-1) {\scriptsize Q1 2026\\PoC validé};
+\node[below, align=center] at (4,-1) {\scriptsize Q2 2027\\CE obtenu};
+\node[below, align=center] at (7,-1) {\scriptsize Q3 2027\\1ers clients};
+\node[below, align=center] at (10,-1) {\scriptsize 2029\\International};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}{L'Équipe}
+\begin{center}
+\Large\textit{[À compléter avec les membres de votre équipe]}
+\end{center}
+
+\vspace{1cm}
+\begin{columns}
+\begin{column}{0.33\textwidth}
+\centering
+\faUser{} \textbf{Nom 1}\\
+\scriptsize Rôle / Compétences\\
+Formation
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+\faUser{} \textbf{Nom 2}\\
+\scriptsize Rôle / Compétences\\
+Formation
+\end{column}
+\begin{column}{0.33\textwidth}
+\centering
+\faUser{} \textbf{Nom 3}\\
+\scriptsize Rôle / Compétences\\
+Formation
+\end{column}
+\end{columns}
+
+\vspace{1cm}
+\begin{alertblock}{Pourquoi nous ?}
+\begin{itemize}
+    \item Compréhension du problème biologique ET technique
+    \item PoC fonctionnel démontrant la faisabilité
+    \item Vision business claire et réaliste
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+% ============================================
+% SLIDE FINAL
+% ============================================
+\begin{frame}{}
+\begin{center}
+\vspace{1cm}
+\begin{tikzpicture}
+\node[draw=dermacube, line width=3pt, rounded corners=8pt, minimum width=2cm, minimum height=2cm, fill=white] {\Large\textbf{\textcolor{dermacube}{ALI}}};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+{\Huge\textbf{DermaCube}}
+
+\vspace{0.3cm}
+{\Large\textit{La culture de peau, enfin maîtrisée.}}
+
+\vspace{1cm}
+\begin{tabular}{ccc}
+\textcolor{dermacube}{\faChartLine} & \textcolor{dermacube}{\faCogs} & \textcolor{dermacube}{\faEuroSign} \\
+\textbf{-75\% échecs} & \textbf{Plug \& Play} & \textbf{ROI 462\%} \\
+\end{tabular}
+
+\vspace{1cm}
+{\large Merci de votre attention}
+
+\vspace{0.5cm}
+{\small Questions ?}
+\end{center}
+\end{frame}
+
+\end{document}
